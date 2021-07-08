@@ -1,15 +1,12 @@
-import {useNavigation} from '@react-navigation/native';
-import React from 'react';
-import {useRef} from 'react';
-import {Animated, Dimensions, Image, StyleSheet, View} from 'react-native';
-import {getStatusBarHeight} from 'react-native-status-bar-height';
-import {Item} from './components/Item';
+import { useNavigation } from '@react-navigation/native';
+import React, { useRef } from 'react';
+import { Animated, Image, StyleSheet, View } from 'react-native';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
+import { Item, SPACING } from './components/Item';
 
-const {width, height} = Dimensions.get('screen');
-const ITEM_SIZE = 100; // image height + paddingVertical
+const STATUS_BAR_HEIGHT = getStatusBarHeight();
 
 export const HomeScreen = () => {
-	const navigation = useNavigation();
 	const scrollY = useRef(new Animated.Value(0)).current;
 
 	return (
@@ -24,37 +21,16 @@ export const HomeScreen = () => {
 			/>
 
 			<Animated.FlatList
-				onScroll={Animated.event(
-					[{nativeEvent: {contentOffset: {y: scrollY}}}],
-					{useNativeDriver: true},
-				)}
+				contentContainerStyle={styles.contentContainer}
 				data={Array.from(new Array(100).keys())}
+				onScroll={Animated.event(
+					[{ nativeEvent: { contentOffset: { y: scrollY } } }],
+					{ useNativeDriver: true },
+				)}
 				keyExtractor={item => `${item}`}
-				renderItem={({item, index}) => {
-					const inputRange = [
-						-1,
-						0,
-						ITEM_SIZE * index,
-						ITEM_SIZE * (index + 0.5),
-					];
-					const opacityInputRange = [
-						-1,
-						0,
-						ITEM_SIZE * index,
-						ITEM_SIZE * (index + 0.5),
-					];
-					const scale = scrollY.interpolate({
-						inputRange,
-						outputRange: [1, 1, 1, 0],
-					});
-					const opacity = scrollY.interpolate({
-						inputRange: opacityInputRange,
-						outputRange: [1, 1, 1, 0],
-					});
-
-					return <Item scale={scale} opacity={opacity} scrollY={scrollY} />;
+				renderItem={({ item, index }) => {
+					return <Item scrollY={scrollY} index={index} />;
 				}}
-				style={{paddingHorizontal: 16, marginTop: getStatusBarHeight()}}
 			/>
 		</View>
 	);
@@ -64,5 +40,53 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: '#f5f5f5',
+	},
+	contentContainer: {
+		paddingHorizontal: SPACING,
+		paddingTop: STATUS_BAR_HEIGHT,
+	},
+
+	itemContainer: {
+		marginBottom: 15,
+		flexDirection: 'row',
+		alignItems: 'center',
+		backgroundColor: '#fff',
+
+		paddingVertical: 15,
+		paddingHorizontal: 10,
+		borderRadius: 8,
+		width: '100%',
+
+		shadowColor: '#000',
+		shadowOffset: {
+			width: 0,
+			height: 2,
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 3.84,
+
+		elevation: 5,
+	},
+
+	left: {
+		borderRadius: 35,
+		width: 70,
+		height: 70,
+		backgroundColor: '#3f3f3f2b',
+	},
+
+	right: {
+		flex: 1,
+		paddingLeft: 5,
+	},
+	title: {
+		color: '#000',
+		fontSize: 18,
+		fontWeight: 'bold',
+		paddingVertical: 5,
+	},
+	subTitle: {
+		color: '#000',
+		fontSize: 14,
 	},
 });
