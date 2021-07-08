@@ -1,43 +1,15 @@
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import React, {memo} from 'react';
-import {Text, View} from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React, { memo } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { HomeNavigator } from './HomeNavigator';
 
 const BottomTab = createBottomTabNavigator();
 
-const Home = () => {
-	return (
-		<View
-			style={{
-				flex: 1,
-				backgroundColor: '#ececec',
-				justifyContent: 'center',
-				alignItems: 'center',
-			}}>
-			<Text style={{}}>Home tab</Text>
-		</View>
-	);
-};
-const DetailTab = () => {
-	return (
-		<View
-			style={{
-				flex: 1,
-				backgroundColor: '#ececec',
-				justifyContent: 'center',
-				alignItems: 'center',
-			}}>
-			<Text style={{}}>Detail tab</Text>
-		</View>
-	);
-};
-
 export const BottomNavigator = memo(function BottomNavigator() {
 	return (
 		<BottomTab.Navigator
-			screenOptions={({route}) => ({
-				tabBarIcon: ({focused, color, size}) => {
+			screenOptions={({ route }) => ({
+				tabBarIcon: ({ focused, color, size }) => {
 					let iconName;
 
 					switch (route.name) {
@@ -49,9 +21,11 @@ export const BottomNavigator = memo(function BottomNavigator() {
 								? 'information'
 								: 'information-outline';
 							break;
+						default:
+							iconName = focused ? 'close' : 'close-outline';
+							break;
 					}
 
-					// You can return any component that you like here!
 					return (
 						<Ionicons name={iconName} size={size} color={color} />
 					);
@@ -60,19 +34,13 @@ export const BottomNavigator = memo(function BottomNavigator() {
 			tabBarOptions={{
 				activeTintColor: 'tomato',
 				inactiveTintColor: 'gray',
-			}}>
+			}}
+		>
 			<BottomTab.Screen
 				name="HomeTab"
 				component={HomeNavigator}
 				options={{
 					title: 'Trang chủ',
-				}}
-			/>
-			<BottomTab.Screen
-				name="DetailTab"
-				component={DetailTab}
-				options={{
-					title: 'Chi tiết',
 				}}
 			/>
 		</BottomTab.Navigator>
